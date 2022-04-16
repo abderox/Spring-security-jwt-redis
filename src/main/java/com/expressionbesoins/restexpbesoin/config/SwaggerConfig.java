@@ -1,6 +1,10 @@
 package com.expressionbesoins.restexpbesoin.config;
 
+/**
+ * @autor abdelhadi mouzafir
+ */
 
+import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import com.google.common.base.Predicate;
@@ -30,5 +34,7 @@ public class SwaggerConfig {
         return new ApiInfoBuilder().title("generated Project tp").version("2.0").description("Expression de besoins")
                 .license("no license").build();
     }
+
+
 
 }

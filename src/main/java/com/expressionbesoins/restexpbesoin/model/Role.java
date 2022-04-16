@@ -1,5 +1,8 @@
 package com.expressionbesoins.restexpbesoin.model;
 
+/**
+ * @autor abdelhadi mouzafir
+ */
 
 import com.expressionbesoins.restexpbesoin.enums.RoleEnum;
 import lombok.Data;

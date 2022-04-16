@@ -1,4 +1,9 @@
 package com.expressionbesoins.restexpbesoin.model;
+
+/**
+ * @autor abdelhadi mouzafir
+ */
+
 import lombok.Data;
 import javax.persistence.*;
 import java.util.Collection;
