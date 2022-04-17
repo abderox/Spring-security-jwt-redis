@@ -11,7 +11,13 @@ public enum PrivilegeEnum {
     MANAGE_REQUESTS(PrivilegeNames.MANAGE_REQUESTS),
     REGULAR_USER(PrivilegeNames.REGULAR_USER),
     VIEW_PRIVILEGE(PrivilegeNames.VIEW_PRIVILEGE),
-    EDIT_PRIVILEGE(PrivilegeNames.EDIT_PRIVILEGE)
+    EDIT_PRIVILEGE(PrivilegeNames.EDIT_PRIVILEGE),
+
+    // ! roles
+    ROLE_USER(PrivilegeNames.ROLE_USER),
+    ROLE_ADMIN(PrivilegeNames.ROLE_ADMIN),
+    ROLE_SUPER_ADMIN(PrivilegeNames.ROLE_SUPER_ADMIN),
+
     ;
 
     private final String label;
@@ -26,6 +32,13 @@ public enum PrivilegeEnum {
         public static final String REGULAR_USER = "REGULAR_USER";
         public static final String VIEW_PRIVILEGE = "REGULAR_USER";
         public static final String EDIT_PRIVILEGE = "REGULAR_USER";
+
+        // ! roles
+
+        public static final String ROLE_USER = "ROLE_USER";
+        public static final String ROLE_ADMIN = "ROLE_ADMIN";
+        public static final String ROLE_SUPER_ADMIN = "ROLE_SUPER_ADMIN";
+
     }
 
 

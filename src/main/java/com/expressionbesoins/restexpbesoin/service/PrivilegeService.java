@@ -17,13 +17,13 @@ public class PrivilegeService {
 
     Privilege findByName(PrivilegeEnum name) {
         if (name != null) {
-            return privilegeRepo.findByName(name);
+            return privilegeRepo.findPrivilegeByName(name);
         }
         return null;
     }
 
     public Privilege savePrivilege( Privilege privilege){
-        privilege = privilegeRepo.findByName(privilege.getName());
+        privilege = privilegeRepo.findPrivilegeByName(privilege.getName());
         if(privilege == null) {
             privilegeRepo.save(privilege);
         }

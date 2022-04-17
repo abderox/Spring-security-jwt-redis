@@ -4,13 +4,11 @@ package com.expressionbesoins.restexpbesoin.model;
  * @autor abdelhadi mouzafir
  */
 
-import com.expressionbesoins.restexpbesoin.enums.RoleEnum;
+import com.expressionbesoins.restexpbesoin.enums.PrivilegeEnum;
 import lombok.Data;
 
 import javax.persistence.*;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 @Data
 @Entity
@@ -23,7 +21,7 @@ public class Role {
     private Long id;
     @Enumerated(EnumType.STRING)
     @Column(name = "name")
-    private RoleEnum name;
+    private PrivilegeEnum name;
     @ManyToMany(mappedBy = "roles")
     private Collection<User> users;
 
@@ -36,7 +34,7 @@ public class Role {
 
     private Collection<Privilege> privileges;
 
-    public Role(RoleEnum name) {
+    public Role(PrivilegeEnum name) {
         this.name = name;
     }
 }

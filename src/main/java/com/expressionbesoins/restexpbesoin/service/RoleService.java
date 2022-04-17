@@ -5,7 +5,6 @@ package com.expressionbesoins.restexpbesoin.service;
  */
 
 import com.expressionbesoins.restexpbesoin.enums.PrivilegeEnum;
-import com.expressionbesoins.restexpbesoin.enums.RoleEnum;
 import com.expressionbesoins.restexpbesoin.model.Privilege;
 import com.expressionbesoins.restexpbesoin.model.Role;
 import com.expressionbesoins.restexpbesoin.repository.RoleRepo;
@@ -20,15 +19,15 @@ public class RoleService {
     @Autowired
     RoleRepo roleRepo;
 
-    public Role findByName(RoleEnum name) {
+    public Role findByName(PrivilegeEnum name) {
         if (name != null) {
-            return roleRepo.findByName(name);
+            return roleRepo.findRoleByName(name);
         }
         return null;
     }
 
     public Role saveRole(Role role, Collection<Privilege> privileges){
-        role = roleRepo.findByName(role.getName());
+        role = roleRepo.findRoleByName(role.getName());
         if(role == null) {
             role.setPrivileges(privileges);
             roleRepo.save(role);

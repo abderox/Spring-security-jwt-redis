@@ -4,20 +4,16 @@ package com.expressionbesoins.restexpbesoin.service;
  * @author abdelhadi mouzafir
  */
 
-import com.expressionbesoins.restexpbesoin.dto.UserLoginDTO;
 import com.expressionbesoins.restexpbesoin.enums.PrivilegeEnum;
-import com.expressionbesoins.restexpbesoin.enums.RoleEnum;
 import com.expressionbesoins.restexpbesoin.model.Privilege;
 import com.expressionbesoins.restexpbesoin.model.Role;
 import com.expressionbesoins.restexpbesoin.model.User;
-import com.expressionbesoins.restexpbesoin.repository.PrivilegeRepo;
-import com.expressionbesoins.restexpbesoin.repository.RoleRepo;
-import com.expressionbesoins.restexpbesoin.repository.UserRepo;
 import com.expressionbesoins.restexpbesoin.service.User.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
@@ -26,8 +22,9 @@ import java.util.*;
 // ? On startup of the application,
 // ? we'll use an ApplicationListener on ContextRefreshedEvent to load our initial data on server start
 // ? let us setup the roles & privileges
-// * I so hyped for being able to do this myself
+// * I so hyped for being able to do this myself ,  with the help of spring Docs
 
+@Component
 public class SetRoleAndPrivilege implements ApplicationListener<ContextRefreshedEvent> {
 
     // ? the ContextRefreshedEvent may be fired multiple times
@@ -71,11 +68,11 @@ public class SetRoleAndPrivilege implements ApplicationListener<ContextRefreshed
         );
         AdminPrivileges.addAll(AuthentifiedUserPrivileges);
         // ! here I am defining the privileges for the administrator (financial service , Mayor)
-        createRoleIfNotFound(RoleEnum.ROLE_USER,AuthentifiedUserPrivileges);
+        createRoleIfNotFound(PrivilegeEnum.ROLE_USER,AuthentifiedUserPrivileges);
         // ! here I ll define the privileges for the consumer (Professors , staff .. )
-        createRoleIfNotFound(RoleEnum.ROLE_ADMIN,AdminPrivileges);
+        createRoleIfNotFound(PrivilegeEnum.ROLE_ADMIN,AdminPrivileges);
 
-        Role adminRole = roleService.findByName(RoleEnum.ROLE_ADMIN);
+        Role adminRole = roleService.findByName(PrivilegeEnum.ROLE_ADMIN);
         User user = new User();
         user.setFirstName("Test");
         user.setLastName("Test");
@@ -94,7 +91,7 @@ public class SetRoleAndPrivilege implements ApplicationListener<ContextRefreshed
     }
 
     @Transactional
-    Role createRoleIfNotFound(RoleEnum name, Collection<Privilege> privileges) {
+    Role createRoleIfNotFound(PrivilegeEnum name, Collection<Privilege> privileges) {
         return roleService.saveRole(new Role(name),privileges);
     }
 
