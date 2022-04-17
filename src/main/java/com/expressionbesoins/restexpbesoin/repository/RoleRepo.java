@@ -2,6 +2,7 @@ package com.expressionbesoins.restexpbesoin.repository;
 /**
  * @autor abdelhadi mouzafir
  */
+import com.expressionbesoins.restexpbesoin.enums.RoleEnum;
 import com.expressionbesoins.restexpbesoin.model.Role;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
@@ -19,4 +20,5 @@ import java.util.function.Function;
 @Repository
 public interface RoleRepo extends JpaRepository<Role,Long> {
 
+    Role findByName(RoleEnum name);
 }

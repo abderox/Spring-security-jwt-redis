@@ -1,4 +1,4 @@
-package com.expressionbesoins.restexpbesoin;
+package com.expressionbesoins.restexpbesoin.util;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -12,9 +12,9 @@ public class RestExpBesoinApplication {
     public static void main(String[] args) {
         SpringApplication.run(RestExpBesoinApplication.class, args);
     }
-    @GetMapping("/hello")
+    @GetMapping("/test")
     public String hello()
     {
-        return "<h1>hello how are you </h1>";
+        return "<h1>Expression de besoins</h1>";
     }
 }

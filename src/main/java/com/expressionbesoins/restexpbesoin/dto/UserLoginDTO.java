@@ -31,21 +31,14 @@ public class UserLoginDTO {
     @NotEmpty
     private String password;
 
-    @NotNull
-    @NotEmpty
-    private String confirmPassword;
 
     @NotNull
     @Email
     @NotEmpty
     private String email;
 
-    @NotNull
-    @Email
-    @NotEmpty
-    private String confirmEmail;
-
-    @AssertTrue
-    private Boolean terms;
+    // ? better to do it in frontend since this is a restful app
+//    @AssertTrue
+//    private Boolean terms;
 
 }

@@ -1,2 +1,119 @@
-package com.expressionbesoins.restexpbesoin.service;public class SetRoleAndPrivilege {
+package com.expressionbesoins.restexpbesoin.service;
+
+/**
+ * @author abdelhadi mouzafir
+ */
+
+import com.expressionbesoins.restexpbesoin.dto.UserLoginDTO;
+import com.expressionbesoins.restexpbesoin.enums.PrivilegeEnum;
+import com.expressionbesoins.restexpbesoin.enums.RoleEnum;
+import com.expressionbesoins.restexpbesoin.model.Privilege;
+import com.expressionbesoins.restexpbesoin.model.Role;
+import com.expressionbesoins.restexpbesoin.model.User;
+import com.expressionbesoins.restexpbesoin.repository.PrivilegeRepo;
+import com.expressionbesoins.restexpbesoin.repository.RoleRepo;
+import com.expressionbesoins.restexpbesoin.repository.UserRepo;
+import com.expressionbesoins.restexpbesoin.service.User.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
+
+// ? I am explaining
+// ? On startup of the application,
+// ? we'll use an ApplicationListener on ContextRefreshedEvent to load our initial data on server start
+// ? let us setup the roles & privileges
+// * I so hyped for being able to do this myself
+
+public class SetRoleAndPrivilege implements ApplicationListener<ContextRefreshedEvent> {
+
+    // ? the ContextRefreshedEvent may be fired multiple times
+    // ? depending on how many contexts we have configured in our application
+    boolean alreadySetup = false;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private RoleService roleService;
+
+    @Autowired
+    private PrivilegeService privilegeService;
+
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Transactional
+    @Override
+    public void onApplicationEvent(ContextRefreshedEvent event) {
+        if (alreadySetup)
+            return;
+
+        // ! here we ll define all the roles for the appropriate users
+
+
+        List<Privilege> AuthentifiedUserPrivileges = createPrivilegesList(
+                Arrays.asList(
+                        PrivilegeEnum.VIEW_PRIVILEGE,
+                        PrivilegeEnum.EDIT_PRIVILEGE,
+                        PrivilegeEnum.REGULAR_USER)
+        );
+
+        List<Privilege> AdminPrivileges = createPrivilegesList(
+                Arrays.asList(
+                        PrivilegeEnum.MANAGE_REQUESTS,
+                        PrivilegeEnum.MANAGE_USERS
+                        )
+        );
+        AdminPrivileges.addAll(AuthentifiedUserPrivileges);
+        // ! here I am defining the privileges for the administrator (financial service , Mayor)
+        createRoleIfNotFound(RoleEnum.ROLE_USER,AuthentifiedUserPrivileges);
+        // ! here I ll define the privileges for the consumer (Professors , staff .. )
+        createRoleIfNotFound(RoleEnum.ROLE_ADMIN,AdminPrivileges);
+
+        Role adminRole = roleService.findByName(RoleEnum.ROLE_ADMIN);
+        User user = new User();
+        user.setFirstName("Test");
+        user.setLastName("Test");
+        user.setPassword(passwordEncoder.encode("test"));
+        user.setEmail("test@test.com");
+        user.setRoles(new HashSet<Role>(Collections.singletonList(adminRole)));
+        user.setEnabled(true);
+        userService.saveUser(user);
+
+        alreadySetup = true;
+    }
+
+    @Transactional
+    Privilege createPrivilegeIfNotFound(PrivilegeEnum name) {
+        return privilegeService.savePrivilege(new Privilege(name));
+    }
+
+    @Transactional
+    Role createRoleIfNotFound(RoleEnum name, Collection<Privilege> privileges) {
+        return roleService.saveRole(new Role(name),privileges);
+    }
+
+    // ? to make concise I created this method ; more understandable
+
+    List<Privilege> createPrivilegesList(List<PrivilegeEnum> privileges) {
+        List<Privilege> privileges_ = new ArrayList<>();
+        for (PrivilegeEnum pr : privileges) {
+            privileges_.add(createPrivilegeIfNotFound(pr));
+        }
+        return privileges_;
+    }
+
+    // ? Maybe for future use
+//    List<Role> createRolesList(List<RoleEnum> roles , Collection<Privilege> privileges) {
+//        List<Role> roles_ = new ArrayList<>();
+//        for (RoleEnum ro : roles) {
+//            roles_.add(createRoleIfNotFound(ro,privileges));
+//        }
+//        return roles_;
+//    }
 }

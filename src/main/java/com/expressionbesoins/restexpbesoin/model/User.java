@@ -44,7 +44,7 @@ public class User {
 
 
 
-    // une relation plusieurs é plusierus avec les roles
+    // many to many relatioship : user to roles
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL )
     @JoinTable(
             name = "user_roles",
@@ -53,7 +53,7 @@ public class User {
     )
     private Set<Role> roles = new HashSet<Role>();
 
-    // timestamps : date de création
+    // timestamps : creation date
     @CreationTimestamp
     @Column(name="created_at" , nullable = false, updatable = false)
     private Date createdAt;
@@ -67,7 +67,10 @@ public class User {
 
     private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
-    // ? Verifier le mot de passe
+    public User() {
+    }
+
+    // ? password verification
     public boolean isMatchingPassword(String pass) {
         return encoder.matches(pass, password);
     }

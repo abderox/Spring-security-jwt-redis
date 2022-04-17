@@ -36,4 +36,7 @@ public class Role {
 
     private Collection<Privilege> privileges;
 
+    public Role(RoleEnum name) {
+        this.name = name;
+    }
 }
