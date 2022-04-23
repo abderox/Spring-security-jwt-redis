@@ -12,10 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Data
 @Entity
@@ -67,8 +64,7 @@ public class User {
 
     private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
-    public User() {
-    }
+
 
     // ? password verification
     public boolean isMatchingPassword(String pass) {

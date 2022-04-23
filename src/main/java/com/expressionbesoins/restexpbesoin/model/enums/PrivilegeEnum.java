@@ -6,6 +6,11 @@ package com.expressionbesoins.restexpbesoin.model.enums;
 
 public enum PrivilegeEnum {
 
+    // ! roles
+    ROLE_USER(PrivilegeNames.ROLE_USER),
+    ROLE_ADMIN(PrivilegeNames.ROLE_ADMIN),
+    ROLE_SUPER_ADMIN(PrivilegeNames.ROLE_SUPER_ADMIN),
+
     // ! à modifier
     MANAGE_USERS(PrivilegeNames.MANAGE_USERS),
     MANAGE_REQUESTS(PrivilegeNames.MANAGE_REQUESTS),
@@ -13,10 +18,6 @@ public enum PrivilegeEnum {
     VIEW_PRIVILEGE(PrivilegeNames.VIEW_PRIVILEGE),
     EDIT_PRIVILEGE(PrivilegeNames.EDIT_PRIVILEGE),
 
-    // ! roles
-    ROLE_USER(PrivilegeNames.ROLE_USER),
-    ROLE_ADMIN(PrivilegeNames.ROLE_ADMIN),
-    ROLE_SUPER_ADMIN(PrivilegeNames.ROLE_SUPER_ADMIN),
 
     ;
 

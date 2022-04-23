@@ -10,7 +10,10 @@ import com.expressionbesoins.restexpbesoin.model.Role;
 import com.expressionbesoins.restexpbesoin.model.User;
 import com.expressionbesoins.restexpbesoin.repository.RoleRepo;
 import com.expressionbesoins.restexpbesoin.repository.UserRepo;
+import com.expressionbesoins.restexpbesoin.service.SetRoleAndPrivilege;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.security.core.session.SessionRegistry;
@@ -23,6 +26,7 @@ import java.util.Collection;
 @Service
 public class UserService implements IUserService {
 
+    Logger LOGGER = LoggerFactory.getLogger(UserService.class);
     @Autowired
     UserRepo userRepo;
     // ? I use modelMapper to make object mapping easy , by automatically determining how on object model maps to another , based on conventions
@@ -57,8 +61,9 @@ public class UserService implements IUserService {
         if (emailExists(accountDto.getEmail())) {
             throw new AlreadyUsedEmail("There is an account with that email address: " + accountDto.getEmail());
         }
+        LOGGER.debug(accountDto.toString());
         final User user = this.convertToModel(accountDto);
-
+        LOGGER.debug(user.toString());
         return userRepo.save(user);
     }
 

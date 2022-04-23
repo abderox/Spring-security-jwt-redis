@@ -36,9 +36,15 @@ public class RegistraionController {
 
     // ? Registration
     @PostMapping("/user/registration")
-    public ResponseEntity<User> registerUserAccount(@RequestBody UserLoginDTO accountDto) {
-        LOGGER.debug("Registering user account with information: {}", accountDto);
-        return new ResponseEntity<>(userService.registerNewUserAccount(accountDto),HttpStatus.OK);
+    public ResponseEntity<UserLoginDTO> registerUserAccount(@RequestBody UserLoginDTO accountDto) {
+        LOGGER.info("Registering user account with information: {}", accountDto);
+        try {
+           User user = userService.registerNewUserAccount(accountDto);
+            return new ResponseEntity<>(accountDto,HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
     @GetMapping("/test")
