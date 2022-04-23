@@ -4,19 +4,24 @@ package com.expressionbesoins.restexpbesoin.service.User;
  */
 
 import com.expressionbesoins.restexpbesoin.dto.UserLoginDTO;
+import com.expressionbesoins.restexpbesoin.exception.AlreadyUsedEmail;
 import com.expressionbesoins.restexpbesoin.model.Privilege;
 import com.expressionbesoins.restexpbesoin.model.Role;
 import com.expressionbesoins.restexpbesoin.model.User;
+import com.expressionbesoins.restexpbesoin.repository.RoleRepo;
 import com.expressionbesoins.restexpbesoin.repository.UserRepo;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 
 @Service
-public class UserService {
+public class UserService implements IUserService {
 
     @Autowired
     UserRepo userRepo;
@@ -24,15 +29,37 @@ public class UserService {
     // ? instead of hardcoding the conversion using useless bunch of lines
     ModelMapper modelMapper;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private RoleRepo roleRepo;
+
+   // @Autowired
+    //private SessionRegistry sessionRegistry;
+
     // ! Depending on the needs we ll define some useful methods here
     // ! aftermaths
 
-    public User saveUser(User user){
-        user = userRepo.findUserByUsername(user.getUsername());
-        if(user == null) {
-            userRepo.save(user);
+    // ! for testing  ************************
+    @Override
+    public User saveRegisteredUser(User user){
+        User user_ = userRepo.findUserByUsername(user.getUsername());
+        if(user_ == null) {
+            user_ = userRepo.save(user);
         }
-        return user;
+        return user_;
+    }
+
+    // * new account
+    @Override
+    public User registerNewUserAccount(final UserLoginDTO accountDto) {
+        if (emailExists(accountDto.getEmail())) {
+            throw new AlreadyUsedEmail("There is an account with that email address: " + accountDto.getEmail());
+        }
+        final User user = this.convertToModel(accountDto);
+
+        return userRepo.save(user);
     }
 
     public User findUserByUsername(String username) {
@@ -51,5 +78,26 @@ public class UserService {
     // ? dto to model conversion
     public User convertToModel(UserLoginDTO userLoginDTO) {
         return modelMapper.map(userLoginDTO, User.class);
+    }
+
+
+    @Override
+    public User getUser(String verificationToken) {
+        return null;
+    }
+
+
+
+    @Override
+    public void deleteUser(User user) {
+
+    }
+
+    @Override
+    public void createVerificationTokenForUser(User user, String token) {
+
+    }
+    private boolean emailExists(final String email) {
+        return userRepo.findUserByEmail(email) != null;
     }
 }

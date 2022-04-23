@@ -4,7 +4,7 @@ package com.expressionbesoins.restexpbesoin.security;
  * @autor abdelhadi mouzafir
  */
 
-import com.expressionbesoins.restexpbesoin.enums.PrivilegeEnum;
+import com.expressionbesoins.restexpbesoin.model.enums.PrivilegeEnum;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;

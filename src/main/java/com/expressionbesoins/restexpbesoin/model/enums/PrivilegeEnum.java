@@ -1,4 +1,4 @@
-package com.expressionbesoins.restexpbesoin.enums;
+package com.expressionbesoins.restexpbesoin.model.enums;
 
 /**
  * @autor abdelhadi mouzafir

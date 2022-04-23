@@ -4,7 +4,7 @@ package com.expressionbesoins.restexpbesoin.model;
  * @autor abdelhadi mouzafir
  */
 
-import com.expressionbesoins.restexpbesoin.enums.PrivilegeEnum;
+import com.expressionbesoins.restexpbesoin.model.enums.PrivilegeEnum;
 import lombok.Data;
 import javax.persistence.*;
 import java.util.Collection;
@@ -19,7 +19,7 @@ public class Privilege {
     @Column(name="privilege_id")
     private Long id;
     @Column(name="name")
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private PrivilegeEnum name;
 
     @ManyToMany(mappedBy = "privileges")
@@ -27,5 +27,9 @@ public class Privilege {
 
     public Privilege(PrivilegeEnum name) {
         this.name = name;
+    }
+
+    public Privilege() {
+
     }
 }

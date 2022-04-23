@@ -4,12 +4,13 @@ package com.expressionbesoins.restexpbesoin.security;
  * @autor abdelhadi mouzafir
  */
 
-import com.expressionbesoins.restexpbesoin.enums.PrivilegeEnum;
+import com.expressionbesoins.restexpbesoin.model.enums.PrivilegeEnum;
 import com.expressionbesoins.restexpbesoin.model.Privilege;
 import com.expressionbesoins.restexpbesoin.model.Role;
 import com.expressionbesoins.restexpbesoin.model.User;
 import com.expressionbesoins.restexpbesoin.repository.RoleRepo;
 import com.expressionbesoins.restexpbesoin.repository.UserRepo;
+import com.expressionbesoins.restexpbesoin.service.User.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.security.core.GrantedAuthority;
@@ -33,8 +34,8 @@ public class CustomUserDetails implements UserDetailsService {
     @Autowired
     private UserRepo userRepository;
 
-//    @Autowired
-//    private IUserService service;
+    @Autowired
+    private IUserService service;
 
     @Autowired
     private MessageSource messages;
@@ -47,10 +48,12 @@ public class CustomUserDetails implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.findUserByEmail(email);
         if (user == null) {
-            return new org.springframework.security.core.userdetails.User(
-                    " ", " ", true, true, true, true,
-                    getAuthorities(Arrays.asList(
-                            roleRepository.findRoleByName(PrivilegeEnum.ROLE_USER))));
+            // ! no need for this here
+//            return new org.springframework.security.core.userdetails.User(
+//                    " ", " ", true, true, true, true,
+//                    getAuthorities(Arrays.asList(
+//                            roleRepository.findRoleByName(PrivilegeEnum.ROLE_USER))));
+            throw new UsernameNotFoundException("No user found with username: " + email);
 
         }
 

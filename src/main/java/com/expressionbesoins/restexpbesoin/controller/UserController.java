@@ -4,11 +4,10 @@ package com.expressionbesoins.restexpbesoin.controller;
  * @autor abdelhadi mouzafir
  */
 
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RestController;
 
 
-@RequestMapping(value ="/Register")
-@RestController
+
 public class UserController {
 
 

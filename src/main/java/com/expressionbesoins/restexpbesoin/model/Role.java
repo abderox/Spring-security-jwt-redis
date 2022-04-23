@@ -4,7 +4,7 @@ package com.expressionbesoins.restexpbesoin.model;
  * @autor abdelhadi mouzafir
  */
 
-import com.expressionbesoins.restexpbesoin.enums.PrivilegeEnum;
+import com.expressionbesoins.restexpbesoin.model.enums.PrivilegeEnum;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -36,5 +36,9 @@ public class Role {
 
     public Role(PrivilegeEnum name) {
         this.name = name;
+    }
+
+    public Role() {
+
     }
 }

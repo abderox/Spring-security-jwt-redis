@@ -4,7 +4,7 @@ package com.expressionbesoins.restexpbesoin.service;
  * @autor abdelhadi mouzafir
  */
 
-import com.expressionbesoins.restexpbesoin.enums.PrivilegeEnum;
+import com.expressionbesoins.restexpbesoin.model.enums.PrivilegeEnum;
 import com.expressionbesoins.restexpbesoin.model.Privilege;
 import com.expressionbesoins.restexpbesoin.model.Role;
 import com.expressionbesoins.restexpbesoin.repository.RoleRepo;
@@ -26,12 +26,13 @@ public class RoleService {
         return null;
     }
 
-    public Role saveRole(Role role, Collection<Privilege> privileges){
-        role = roleRepo.findRoleByName(role.getName());
-        if(role == null) {
+    public Role saveRole(Role role, Collection<Privilege> privileges) {
+        Role role_ = roleRepo.findRoleByName(role.getName());
+        if (role_ == null) {
             role.setPrivileges(privileges);
-            roleRepo.save(role);
+            role_ = roleRepo.save(role);
         }
-        return role;
+        return role_;
     }
+
 }

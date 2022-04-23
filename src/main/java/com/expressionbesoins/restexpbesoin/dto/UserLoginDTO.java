@@ -5,6 +5,7 @@ package com.expressionbesoins.restexpbesoin.dto;
  */
 
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,8 +16,7 @@ import javax.validation.constraints.NotNull;
 
 
 
-@Getter
-@Setter
+@Data
 public class UserLoginDTO {
 
     @NotNull
@@ -30,7 +30,6 @@ public class UserLoginDTO {
     @NotNull
     @NotEmpty
     private String password;
-
 
     @NotNull
     @Email
