@@ -6,12 +6,15 @@ package com.expressionbesoins.restexpbesoin.model;
 
 import com.expressionbesoins.restexpbesoin.model.enums.PrivilegeEnum;
 import lombok.Data;
+import lombok.ToString;
+
 import javax.persistence.*;
 import java.util.Collection;
 
 @Data
 @Entity
 @Table(name="privileges")
+@ToString(exclude = {"roles"})
 public class Privilege {
 
     @Id
@@ -22,8 +25,8 @@ public class Privilege {
     @Enumerated(EnumType.STRING)
     private PrivilegeEnum name;
 
-    @ManyToMany(mappedBy = "privileges")
-    private Collection<Role> roles;
+//    @ManyToMany(mappedBy = "privileges")
+//    private Collection<Role> roles;
 
     public Privilege(PrivilegeEnum name) {
         this.name = name;

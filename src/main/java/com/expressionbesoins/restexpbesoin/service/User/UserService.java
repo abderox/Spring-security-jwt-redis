@@ -4,6 +4,7 @@ package com.expressionbesoins.restexpbesoin.service.User;
  */
 
 import com.expressionbesoins.restexpbesoin.dto.UserLoginDTO;
+import com.expressionbesoins.restexpbesoin.dto.UserRegDTO;
 import com.expressionbesoins.restexpbesoin.exception.AlreadyUsedEmail;
 import com.expressionbesoins.restexpbesoin.model.Privilege;
 import com.expressionbesoins.restexpbesoin.model.Role;
@@ -11,7 +12,9 @@ import com.expressionbesoins.restexpbesoin.model.User;
 import com.expressionbesoins.restexpbesoin.repository.RoleRepo;
 import com.expressionbesoins.restexpbesoin.repository.UserRepo;
 import com.expressionbesoins.restexpbesoin.service.SetRoleAndPrivilege;
+import net.bytebuddy.asm.Advice;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
+import java.util.List;
 
 @Service
 public class UserService implements IUserService {
@@ -57,19 +61,38 @@ public class UserService implements IUserService {
 
     // * new account
     @Override
-    public User registerNewUserAccount(final UserLoginDTO accountDto) {
-        if (emailExists(accountDto.getEmail())) {
-            throw new AlreadyUsedEmail("There is an account with that email address: " + accountDto.getEmail());
+    public User registerNewUserAccount( User user) {
+
+        if (emailExists(user.getEmail())) {
+            throw new AlreadyUsedEmail("There is an account with that email address: " + user.getEmail());
         }
-        LOGGER.debug(accountDto.toString());
-        final User user = this.convertToModel(accountDto);
         LOGGER.debug(user.toString());
         return userRepo.save(user);
     }
 
+    @Transactional(readOnly = true)
     public User findUserByUsername(String username) {
         return userRepo.findUserByUsername(username);
     }
+
+    @Override
+    public User findAndLogin(UserRegDTO accountDto) {
+        User user = userRepo.findUserByEmail(accountDto.getEmailUser());
+        if (!emailExists(user.getEmail())) {
+            throw new RuntimeException("User not found");
+        }
+        if (!passwordEncoder.matches(accountDto.getPasswordUser(), user.getPassword())) {
+            throw new RuntimeException("Invalid password");
+        }
+
+        return user;
+    }
+
+    @Override
+    public List<User> findAll() {
+        return userRepo.findAll();
+    }
+
     @Transactional
     public int deleteByuserName(String userName) {
         return userRepo.deleteUserByUsername(userName);
@@ -81,9 +104,13 @@ public class UserService implements IUserService {
     }
 
     // ? dto to model conversion
-    public User convertToModel(UserLoginDTO userLoginDTO) {
-        return modelMapper.map(userLoginDTO, User.class);
-    }
+//    public User convertToModel(UserLoginDTO userLoginDTO) {
+//        System.out.println("convertToModel" + userLoginDTO.toString());
+//        System.out.println(modelMapper.map(userLoginDTO, User.class));
+//        return modelMapper.map(userLoginDTO, User.class);
+//    }
+
+
 
 
     @Override

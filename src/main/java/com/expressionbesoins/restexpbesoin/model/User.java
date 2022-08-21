@@ -3,7 +3,11 @@ package com.expressionbesoins.restexpbesoin.model;
  * @autor abdelhadi mouzafir
  */
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.ManyToAny;
@@ -13,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.*;
+
 
 @Data
 @Entity
@@ -26,17 +31,17 @@ public class User {
     // les informations génirales de l'utilisateur
     @Column(name="username" , nullable = false )
     private String username;
-    @Column(name="firstName" , nullable = false )
+    @Column(name="firstName")
     private String firstName;
-    @Column(name="lastName" , nullable = false )
+    @Column(name="lastName")
     private String lastName;
     @NotNull
-    @Column(name="email" , nullable = false )
+    @Column(name="email"  )
     private String email;
     @NotNull
     @Column(name="password" , nullable = false )
     private String password;
-    @Column(name="enabled" , nullable = false )
+    @Column(name="enabled" )
     private boolean enabled;
 
 
@@ -48,7 +53,8 @@ public class User {
             joinColumns = @JoinColumn(name="user_id"),
             inverseJoinColumns = @JoinColumn(name="role_id")
     )
-    private Set<Role> roles = new HashSet<Role>();
+    @JsonBackReference
+    private Set<Role> roles = new HashSet<>( );
 
     // timestamps : creation date
     @CreationTimestamp
@@ -64,11 +70,18 @@ public class User {
 
     private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
+    public User()
+    {
 
+    }
 
     // ? password verification
     public boolean isMatchingPassword(String pass) {
         return encoder.matches(pass, password);
+    }
+
+    public static String encodePassword(String password) {
+        return encoder.encode(password);
     }
 
 

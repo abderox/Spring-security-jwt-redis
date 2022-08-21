@@ -26,7 +26,7 @@ public class RoleConfig {
     // ! we add the roleHierarchy instance to the WebSecurityExpressionHandler
 
     @Bean
-    public DefaultWebSecurityExpressionHandler webSecurityExpressionHandler() {
+    public DefaultWebSecurityExpressionHandler webSecurityExpressionHandlerCustom() {
         DefaultWebSecurityExpressionHandler expressionHandler = new DefaultWebSecurityExpressionHandler();
         expressionHandler.setRoleHierarchy(roleHierarchy());
         return expressionHandler;

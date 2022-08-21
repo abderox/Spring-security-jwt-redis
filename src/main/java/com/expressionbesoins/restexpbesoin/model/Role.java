@@ -5,13 +5,16 @@ package com.expressionbesoins.restexpbesoin.model;
  */
 
 import com.expressionbesoins.restexpbesoin.model.enums.PrivilegeEnum;
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Collection;
 
 @Data
 @Entity
+@ToString(exclude = {"users"})
 @Table(name = "roles")
 public class Role {
 
@@ -22,16 +25,18 @@ public class Role {
     @Enumerated(EnumType.STRING)
     @Column(name = "name")
     private PrivilegeEnum name;
-    @ManyToMany(mappedBy = "roles")
-    private Collection<User> users;
+//    @ManyToMany(mappedBy = "roles")
+//    @JsonIgnore
+//    private Collection<User> users;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(
             name = "role_privileges",
             joinColumns = @JoinColumn(name = "role_id"),
             inverseJoinColumns = @JoinColumn(name = "privilege_id")
     )
-
+//    @EqualsAndHashCode.Exclude
+//    @JsonBackReference
     private Collection<Privilege> privileges;
 
     public Role(PrivilegeEnum name) {

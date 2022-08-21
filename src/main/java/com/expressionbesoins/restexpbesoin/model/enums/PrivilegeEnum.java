@@ -43,7 +43,7 @@ public enum PrivilegeEnum {
     }
 
 
-    private PrivilegeEnum(String label) {
+    PrivilegeEnum(String label) {
         this.label = label;
     }
 

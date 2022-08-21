@@ -23,35 +23,27 @@ import java.util.Set;
 @Data
 public class UserLoginDTO {
 
-    @NotNull
-    @NotEmpty
-    private String firstName;
-
-    @NotNull
-    @NotEmpty
-    private String lastName;
-
-    @NotNull
-    @NotEmpty
-    private String password;
-
-    @NotNull
-    @Email
-    @NotEmpty
-    private String email;
-
-    @NotNull
-    private boolean enabled;
-
-    @NotNull
-    private String username;
+    private String firstNameUser;
 
 
-    private Set<Role> roles = new HashSet<Role>();
+    private String lastNameUser;
 
-    public UserLoginDTO() {
 
-    }
+    private String passwordUser;
+
+
+    private String emailUser;
+
+
+    private boolean enabledUser;
+
+
+    private String usernameUser;
+
+
+
+
+
 // ? better to do it in frontend since this is a restful app
 //    @AssertTrue
 //    private Boolean terms;
