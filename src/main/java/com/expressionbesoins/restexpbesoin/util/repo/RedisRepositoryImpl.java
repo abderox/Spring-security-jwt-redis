@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
+import java.util.List;
 
 @Repository
 public class RedisRepositoryImpl implements RedisRepository {
@@ -42,4 +43,12 @@ public class RedisRepositoryImpl implements RedisRepository {
     public JwtToken findToken(String username) {
         return new JwtToken( (String) hashOperations.get(KEY,username),username);
     }
+
+    @Override
+    public boolean isFoundToken(String username) {
+        return findToken(username) != null;
+    }
+
+
+
 }

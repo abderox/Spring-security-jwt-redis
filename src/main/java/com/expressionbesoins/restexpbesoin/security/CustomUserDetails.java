@@ -40,10 +40,6 @@ public class CustomUserDetails implements UserDetailsService {
         User user = userRepository.findUserByEmail(email);
         if (user == null) {
             // ! no need for this here
-//            return new org.springframework.security.core.userdetails.User(
-//                    " ", " ", true, true, true, true,
-//                    getAuthorities(Arrays.asList(
-//                            roleRepository.findRoleByName(PrivilegeEnum.ROLE_USER))));
             throw new UsernameNotFoundException("No user found with username: " + email);
 
         }

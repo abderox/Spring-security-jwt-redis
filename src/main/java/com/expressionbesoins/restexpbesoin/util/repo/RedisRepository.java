@@ -3,6 +3,8 @@ package com.expressionbesoins.restexpbesoin.util.repo;
 import com.expressionbesoins.restexpbesoin.util.JwtToken;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 
 public interface RedisRepository {
 
@@ -11,6 +13,10 @@ public interface RedisRepository {
     void delete(String username);
 
     JwtToken findToken(String username);
+
+    boolean isFoundToken(String username);
+
+
 
 
 }

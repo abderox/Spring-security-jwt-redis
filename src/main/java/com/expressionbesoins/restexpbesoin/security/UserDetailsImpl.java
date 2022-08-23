@@ -17,6 +17,7 @@ public class UserDetailsImpl implements UserDetails {
     private final Collection<? extends GrantedAuthority> authorities;
     private static final long serialVersionUID = 1L;
     private User user;
+    private Set<String> roles;
 
     public UserDetailsImpl(User user , String username, String password, boolean enabled, Collection<? extends GrantedAuthority> authorities) {
         this.user = user;
@@ -26,12 +27,14 @@ public class UserDetailsImpl implements UserDetails {
         this.authorities = authorities;
     }
 
-    public UserDetailsImpl(User user, Collection<? extends GrantedAuthority> authorities) {
+
+    public UserDetailsImpl(User user, Collection<? extends GrantedAuthority> authorities, Set<String> roles) {
         this.user = user;
         this.username = user.getEmail();
         this.password = user.getPassword();
         this.enabled = user.isEnabled();
         this.authorities = authorities;
+        this.roles = roles;
     }
 
 
@@ -45,15 +48,16 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        Set<Role> roles = user.getRoles();
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
         if ( roles != null ) {
-            for (Role role : roles) {
-                authorities.add(new SimpleGrantedAuthority(role.getName().toString()));
+            for (String role : roles) {
+                authorities.add(new SimpleGrantedAuthority(role));
+                System.out.println("roles working : "+role);
             }
         }
         else {
             authorities.add(new SimpleGrantedAuthority(PrivilegeEnum.ROLE_USER.toString()));
+            System.out.println("roles empty  : "+ PrivilegeEnum.ROLE_USER);
         }
 
         return authorities;

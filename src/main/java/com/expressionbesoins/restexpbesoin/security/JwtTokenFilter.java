@@ -1,10 +1,14 @@
 package com.expressionbesoins.restexpbesoin.security;
 
+import com.expressionbesoins.restexpbesoin.exception.ApiError;
 import com.expressionbesoins.restexpbesoin.model.Role;
 import com.expressionbesoins.restexpbesoin.model.User;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,53 +27,60 @@ import java.util.*;
 
 
 @Component
-public class JwtTokenFilter  extends OncePerRequestFilter {
+public class JwtTokenFilter extends OncePerRequestFilter {
 
     @Autowired
     JwtTokenUtil jwtTokenUtil;
 
 
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
         // TODO Auto-generated method stub
 
-            if (!hasAuthorizationBearer(request)) {
-                filterChain.doFilter(request, response);
-                return;
-            }
-
-            String token = getAccessToken(request);
-
-            if (!jwtTokenUtil.validateToken(token)) {
-                filterChain.doFilter(request, response);
-                return;
-            }
-
-            setAuthenticationCoontext( request,token);
+        if ( !hasAuthorizationBearer(request) ) {
             filterChain.doFilter(request, response);
+            return;
+        }
+
+
+//        if ( SecurityContextHolder.getContext( ).getAuthentication( ) == null ) {
+//
+//            ApiError errorResponse = new ApiError(HttpStatus.UNAUTHORIZED, "Unauthorized : invalid/expired token");
+//            response.setStatus(HttpStatus.UNAUTHORIZED.value( ));
+//            response.getWriter( ).write(errorResponse.convertToJson(errorResponse));
+//            return;
+//        }
+
+        String token = getAccessToken(request);
+        if ( !jwtTokenUtil.validateToken(token) ) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        setAuthenticationCoontext(request, token);
+        filterChain.doFilter(request, response);
 
     }
 
-    private void setAuthenticationCoontext(HttpServletRequest request, String token) {
+    private void setAuthenticationCoontext(HttpServletRequest request, String token) throws IOException {
         UserDetailsImpl userDetails = getUserDetails(token);
-        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, token,null);
-        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-        System.out.println("authentication : "+authentication.getPrincipal().toString());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, token, userDetails.getAuthorities( ));
+        authentication.setDetails(new WebAuthenticationDetailsSource( ).buildDetails(request));
+        System.out.println("authentication : " + authentication.getPrincipal( ).toString( ));
+        SecurityContextHolder.getContext( ).setAuthentication(authentication);
     }
 
-    private UserDetailsImpl getUserDetails(String token) {
+    private UserDetailsImpl getUserDetails(String token) throws IOException {
         User user = new User( );
-//        Claims claims = jwtTokenUtil.parseClaims(token);
         String[] splitSuubject = jwtTokenUtil.getSubject(token).split(",");
         user.setId(Long.parseLong(splitSuubject[0]));
         user.setEmail(splitSuubject[1]);
-
-        return new UserDetailsImpl(user, new HashSet<>( ));
+        Set<String> roles = jwtTokenUtil.getAuthorities(token);
+        return new UserDetailsImpl(user, new ArrayList<>( ), roles);
     }
 
     private boolean hasAuthorizationBearer(HttpServletRequest request) {
         String header = request.getHeader("Authorization");
-        if ( ObjectUtils.isEmpty(header) || !header.startsWith("Bearer")) {
+        if ( ObjectUtils.isEmpty(header) || !header.startsWith("Bearer") ) {
             return false;
         }
         return true;
@@ -77,8 +88,9 @@ public class JwtTokenFilter  extends OncePerRequestFilter {
 
     private String getAccessToken(HttpServletRequest request) {
         String header = request.getHeader("Authorization");
-        String token = header.split(" ")[1].trim();
+        String token = header.split(" ")[1].trim( );
         return token;
     }
+
 
 }

@@ -9,18 +9,20 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
 
 @EnableWebSecurity(debug = true)
+@EnableGlobalMethodSecurity(
+        prePostEnabled = false, securedEnabled = false, jsr250Enabled = true
+)
 public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -34,6 +36,8 @@ public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
 
     @Autowired
     PasswordEncoder bCryptPasswordEncoder;
+
+
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -60,15 +64,25 @@ public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
                         "/swagger-ui/**",
                         "/v3/api-docs/**",
                         "/webjars/**",
-                        "/user/registration").permitAll()
+                        "/user/registration",
+                        "/api/v1/logout").permitAll()
                 .anyRequest( ).authenticated( );
 
+//        http.exceptionHandling( )
+//                .authenticationEntryPoint(
+//                        (request, response, ex) -> {
+//                            response.sendError(
+//                                    HttpServletResponse.SC_UNAUTHORIZED,
+//                                    "Invalid token"
+//                            );
+//                        }
+//                );
         http.exceptionHandling( )
                 .authenticationEntryPoint(
                         (request, response, ex) -> {
                             response.sendError(
                                     HttpServletResponse.SC_UNAUTHORIZED,
-                                    ex.getMessage( )
+                                    "Invalid token"
                             );
                         }
                 );

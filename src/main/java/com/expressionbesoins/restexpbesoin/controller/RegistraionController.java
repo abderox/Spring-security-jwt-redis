@@ -27,6 +27,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 ;
+import javax.annotation.security.RolesAllowed;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -89,6 +90,8 @@ public class RegistraionController {
     }
 
     //    @PreAuthorize("hasAuthority('ROLE_USER')")
+
+    @RolesAllowed(PrivilegeEnum.PrivilegeNames.ROLE_SUPER_ADMIN)
     @GetMapping("/test")
     public String hello() {
         return "<h1>Expression de besoins</h1>";
@@ -98,13 +101,17 @@ public class RegistraionController {
     @GetMapping("/users") // ? get user profile
     public ResponseEntity<?> getUserProfile() {
         UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if(redisRepository.findToken(userDetails.getUsername()).getToken()!=null && !redisRepository.findToken(userDetails.getUsername( )).getToken( ).equals("") ) {
+
+        String credentials = SecurityContextHolder.getContext().getAuthentication().getCredentials().toString();
+        boolean isFoundToken =redisRepository.isFoundToken(userDetails.getUsername());
+        String token = redisRepository.findToken(userDetails.getUsername()).getToken();
+
+        if( isFoundToken && token.equals(credentials) ) {
             System.out.println(redisRepository.findToken(userDetails.getUsername()).getToken());
             return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-//        redisRepository.add(new JwtToken(SecurityContextHolder.getContext().getAuthentication().getCredentials().toString(), userDetails.getUsername()));
 
     }
 

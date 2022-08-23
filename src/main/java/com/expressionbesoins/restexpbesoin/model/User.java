@@ -75,14 +75,16 @@ public class User {
 
     }
 
-    // ? password verification
-    public boolean isMatchingPassword(String pass) {
-        return encoder.matches(pass, password);
-    }
+//    public boolean isMatchingPassword(String pass) {
+//        return encoder.matches(pass, password);
+//    }
 
     public static String encodePassword(String password) {
         return encoder.encode(password);
     }
 
+    public void addRole(Role role) {
+        this.roles.add(role);
+    }
 
 }
